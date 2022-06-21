@@ -1,6 +1,7 @@
 package calculator
 
 import (
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -17,8 +18,16 @@ func New() ICalculator {
 }
 
 func (c Calculator) Add(text string) (int, error) {
-	text = strings.ReplaceAll(text, "\n", ",")
-	numberTexts := strings.Split(text, ",")
+	delimiter := ","
+	hasDelimiter, _ := regexp.MatchString("^//(.)\n(.*)$", text)
+
+	if hasDelimiter == true {
+		endIndex := strings.Index(text, "\n")
+		delimiter = text[2:endIndex]
+	}
+
+	text = strings.ReplaceAll(text, "\n", delimiter)
+	numberTexts := strings.Split(text, delimiter)
 	sum := 0
 
 	for _, numberText := range numberTexts {
