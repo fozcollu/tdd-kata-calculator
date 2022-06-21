@@ -39,3 +39,13 @@ func TestAdd_WithUnknownAmountNumbers(t *testing.T) {
 		}
 	}
 }
+
+func TestAdd_HandleNewLinesBetweenNumbers(t *testing.T) {
+	input := "1\n2,3"
+	expected := 6
+
+	stringCalculator := New()
+	if actual, _ := stringCalculator.Add(input); expected != actual {
+		t.Fatalf("Expected: %d, Actual: %d", expected, actual)
+	}
+}
