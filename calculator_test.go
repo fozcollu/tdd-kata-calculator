@@ -49,3 +49,20 @@ func TestAdd_HandleNewLinesBetweenNumbers(t *testing.T) {
 		t.Fatalf("Expected: %d, Actual: %d", expected, actual)
 	}
 }
+
+func TestAdd_SupportDifferentDelimiters(t *testing.T) {
+	testModels := []struct {
+		input    string
+		expected int
+	}{
+		{input: "//;\n1;2", expected: 3},
+		{input: "//*\n1*2*8", expected: 11},
+	}
+	stringCalculator := New()
+
+	for i, testModel := range testModels {
+		if actual, _ := stringCalculator.Add(testModel.input); testModel.expected != actual {
+			t.Fatalf("case %d - Expected: %d, Actual: %d", i+1, testModel.expected, actual)
+		}
+	}
+}
