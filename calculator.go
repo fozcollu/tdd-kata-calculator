@@ -23,19 +23,17 @@ func (c Calculator) Add(text string) (int, error) {
 
 	extractedText = strings.ReplaceAll(extractedText, "\n", delimiter)
 	numbers := strings.Split(extractedText, delimiter)
-	sum := 0
-	var negatives []string
-	for _, numberText := range numbers {
-		number, _ := strconv.Atoi(numberText)
 
-		if number < 0 {
-			negatives = append(negatives, numberText)
-		}
-		sum += number
-	}
-
+	//negatives not allowed
+	negatives := c.findNegatives(numbers)
 	if len(negatives) > 0 {
 		return -1, errors.New("negatives not allowed / " + strings.Join(negatives, ","))
+	}
+
+	sum := 0
+	for _, numberText := range numbers {
+		number, _ := strconv.Atoi(numberText)
+		sum += number
 	}
 
 	return sum, nil
@@ -54,4 +52,15 @@ func (c *Calculator) extractDelimiterAndNumbers(text string) (string, string) {
 
 	}
 	return delimiter, numbers
+}
+
+func (c *Calculator) findNegatives(numbers []string) []string {
+	var negatives []string
+	for _, numberText := range numbers {
+		number, _ := strconv.Atoi(numberText)
+		if number < 0 {
+			negatives = append(negatives, numberText)
+		}
+	}
+	return negatives
 }
