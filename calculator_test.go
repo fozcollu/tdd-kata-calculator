@@ -86,3 +86,10 @@ func TestAdd_NegativeNumbersNotAllowed(t *testing.T) {
 		}
 	}
 }
+
+func TestAdd_IgnoreBiggerThan1000Numbers(t *testing.T) {
+	stringCalculator := New()
+	if actual, _ := stringCalculator.Add("2,1001"); actual != 2 {
+		t.Fatalf(" Expected: %d, Actual: %d", 2, actual)
+	}
+}
