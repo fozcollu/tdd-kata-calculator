@@ -20,9 +20,11 @@ func New() ICalculator {
 
 func (c Calculator) Add(text string) (int, error) {
 	delimiter, extractedText := c.extractDelimiterAndNumbers(text)
-
 	extractedText = strings.ReplaceAll(extractedText, "\n", delimiter)
-	numbers := strings.Split(extractedText, delimiter)
+	numberTexts := strings.Split(extractedText, delimiter)
+
+	numbers := c.convertNumberTextsToInteger(numberTexts)
+	numbers = c.ignoreBiggerThan1000(numbers)
 
 	//negatives not allowed
 	negatives := c.findNegatives(numbers)
@@ -31,15 +33,20 @@ func (c Calculator) Add(text string) (int, error) {
 	}
 
 	sum := 0
-	for _, numberText := range numbers {
-		number, _ := strconv.Atoi(numberText)
-		if number > 1000 {
-			continue
-		}
+	for _, number := range numbers {
 		sum += number
 	}
 
 	return sum, nil
+}
+
+func (c *Calculator) convertNumberTextsToInteger(numberTexts []string) []int {
+	var numbers []int
+	for _, numberText := range numberTexts {
+		number, _ := strconv.Atoi(numberText)
+		numbers = append(numbers, number)
+	}
+	return numbers
 }
 
 func (c *Calculator) extractDelimiterAndNumbers(text string) (string, string) {
@@ -57,13 +64,25 @@ func (c *Calculator) extractDelimiterAndNumbers(text string) (string, string) {
 	return delimiter, numbers
 }
 
-func (c *Calculator) findNegatives(numbers []string) []string {
+func (c *Calculator) findNegatives(numbers []int) []string {
 	var negatives []string
-	for _, numberText := range numbers {
-		number, _ := strconv.Atoi(numberText)
+	for _, number := range numbers {
 		if number < 0 {
-			negatives = append(negatives, numberText)
+			negatives = append(negatives, strconv.Itoa(number))
 		}
 	}
 	return negatives
+}
+
+func (c *Calculator) ignoreBiggerThan1000(numbers []int) []int {
+	var validNumbers []int
+
+	for _, number := range numbers {
+		if number < 1000 {
+			validNumbers = append(validNumbers, number)
+		}
+	}
+
+	return validNumbers
+
 }
