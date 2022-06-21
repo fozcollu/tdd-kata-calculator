@@ -33,6 +33,9 @@ func (c Calculator) Add(text string) (int, error) {
 	sum := 0
 	for _, numberText := range numbers {
 		number, _ := strconv.Atoi(numberText)
+		if number > 1000 {
+			continue
+		}
 		sum += number
 	}
 
