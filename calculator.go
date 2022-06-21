@@ -18,15 +18,12 @@ func New() ICalculator {
 
 func (c Calculator) Add(text string) (int, error) {
 	numberTexts := strings.Split(text, ",")
-	firstNumber := 0
-	secondNumber := 0
+	sum := 0
 
-	if len(numberTexts) > 0 {
-		firstNumber, _ = strconv.Atoi(numberTexts[0])
-	}
-	if len(numberTexts) > 1 {
-		secondNumber, _ = strconv.Atoi(numberTexts[1])
+	for _, numberText := range numberTexts {
+		number, _ := strconv.Atoi(numberText)
+		sum += number
 	}
 
-	return firstNumber + secondNumber, nil
+	return sum, nil
 }
