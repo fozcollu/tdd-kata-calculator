@@ -1,6 +1,7 @@
 package calculator
 
 import (
+	"errors"
 	"regexp"
 	"strconv"
 	"strings"
@@ -23,10 +24,18 @@ func (c Calculator) Add(text string) (int, error) {
 	extractedText = strings.ReplaceAll(extractedText, "\n", delimiter)
 	numbers := strings.Split(extractedText, delimiter)
 	sum := 0
-
+	var negatives []string
 	for _, numberText := range numbers {
 		number, _ := strconv.Atoi(numberText)
+
+		if number < 0 {
+			negatives = append(negatives, numberText)
+		}
 		sum += number
+	}
+
+	if len(negatives) > 0 {
+		return -1, errors.New("negatives not allowed / " + strings.Join(negatives, ","))
 	}
 
 	return sum, nil
