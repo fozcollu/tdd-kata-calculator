@@ -1,5 +1,10 @@
 package calculator
 
+import (
+	"strconv"
+	"strings"
+)
+
 type ICalculator interface {
 	Add(numbers string) (int, error)
 }
@@ -12,5 +17,16 @@ func New() ICalculator {
 }
 
 func (c Calculator) Add(text string) (int, error) {
-	return 1, nil
+	numberTexts := strings.Split(text, ",")
+	firstNumber := 0
+	secondNumber := 0
+
+	if len(numberTexts) > 0 {
+		firstNumber, _ = strconv.Atoi(numberTexts[0])
+	}
+	if len(numberTexts) > 1 {
+		secondNumber, _ = strconv.Atoi(numberTexts[1])
+	}
+
+	return firstNumber + secondNumber, nil
 }
