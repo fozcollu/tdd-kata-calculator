@@ -17,6 +17,7 @@ func New() ICalculator {
 }
 
 func (c Calculator) Add(text string) (int, error) {
+	text = strings.ReplaceAll(text, "\n", ",")
 	numberTexts := strings.Split(text, ",")
 	sum := 0
 
