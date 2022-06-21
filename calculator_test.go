@@ -66,3 +66,23 @@ func TestAdd_SupportDifferentDelimiters(t *testing.T) {
 		}
 	}
 }
+
+func TestAdd_NegativeNumbersNotAllowed(t *testing.T) {
+	testModels := []struct {
+		input            string
+		expectedErrorMsg string
+	}{
+		{input: "-1,2", expectedErrorMsg: "negatives not allowed / -1"},
+		{input: "-1,-2,3,-8", expectedErrorMsg: "negatives not allowed / -1,-2,-8"},
+	}
+	stringCalculator := New()
+
+	for i, testModel := range testModels {
+		_, err := stringCalculator.Add(testModel.input)
+		if err == nil {
+			t.Fatalf("case :%d - Expected Error: %s, but actual no error", i+1, testModel.expectedErrorMsg)
+		} else if testModel.expectedErrorMsg != err.Error() {
+			t.Fatalf("case :%d - Expected Error: %s, Actual: %s", i+1, testModel.expectedErrorMsg, err.Error())
+		}
+	}
+}
