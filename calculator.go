@@ -18,22 +18,31 @@ func New() ICalculator {
 }
 
 func (c Calculator) Add(text string) (int, error) {
-	delimiter := ","
-	hasDelimiter, _ := regexp.MatchString("^//(.)\n(.*)$", text)
+	delimiter, extractedText := c.extractDelimiterAndNumbers(text)
 
-	if hasDelimiter == true {
-		endIndex := strings.Index(text, "\n")
-		delimiter = text[2:endIndex]
-	}
-
-	text = strings.ReplaceAll(text, "\n", delimiter)
-	numberTexts := strings.Split(text, delimiter)
+	extractedText = strings.ReplaceAll(extractedText, "\n", delimiter)
+	numbers := strings.Split(extractedText, delimiter)
 	sum := 0
 
-	for _, numberText := range numberTexts {
+	for _, numberText := range numbers {
 		number, _ := strconv.Atoi(numberText)
 		sum += number
 	}
 
 	return sum, nil
+}
+
+func (c *Calculator) extractDelimiterAndNumbers(text string) (string, string) {
+	//default delimiter is ','
+	delimiter := ","
+	delimiterPattern := "^//(.)\n(.*)$"
+	hasDifferentDelimiter, _ := regexp.MatchString(delimiterPattern, text)
+	numbers := text
+	if hasDifferentDelimiter == true {
+		endIndex := strings.Index(text, "\n")
+		delimiter = (text)[2:endIndex]
+		numbers = text[endIndex:]
+
+	}
+	return delimiter, numbers
 }
